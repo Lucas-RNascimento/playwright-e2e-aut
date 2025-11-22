@@ -1,0 +1,72 @@
+[dotenv@17.2.3] injecting env (1) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+Running 6 tests using 6 workers
+
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+  ✘  5 [chromium] › tests\tasks.spec.ts:94:9 › atualização › deve concluir uma tarefa (277ms)
+  ✘  2 [chromium] › tests\tasks.spec.ts:62:9 › cadastro › não deve permitir tarefa duplicada (395ms)
+  ✓  1 [chromium] › tests\home.spec.ts:3:5 › webapp deve estar online (673ms)
+  ✓  4 [chromium] › tests\tasks.spec.ts:77:9 › cadastro › Campo Obrigatorio (712ms)
+  ✓  3 [chromium] › tests\tasks.spec.ts:41:9 › cadastro › deve poder cadastrar uma nova tarefa (712ms)
+  ✓  6 [chromium] › tests\tasks.spec.ts:110:9 › exclusão › deve excluir uma tarefa (663ms)
+
+
+  1) [chromium] › tests\tasks.spec.ts:62:9 › cadastro › não deve permitir tarefa duplicada ─────────
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeTruthy[2m()[22m
+
+    Received: [31mfalse[39m
+
+       at support\helpers.ts:14
+
+      12 | export async function postTask(request:APIRequestContext, task: TaskModel) {
+      13 |     const newTask = await request.post(`${BASE_API}/tasks`, {data: task})
+    > 14 |     expect(newTask.ok()).toBeTruthy()
+         |                          ^
+      15 |     return newTask
+      16 | }
+      17 |
+        at postTask (C:\git\QAe2e\playwright-mark\tests\support\helpers.ts:14:26)
+        at C:\git\QAe2e\playwright-mark\tests\tasks.spec.ts:67:9
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\tasks-cadastro-não-deve-permitir-tarefa-duplicada-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › tests\tasks.spec.ts:94:9 › atualização › deve concluir uma tarefa ────────────────
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeTruthy[2m()[22m
+
+    Received: [31mfalse[39m
+
+       at support\helpers.ts:14
+
+      12 | export async function postTask(request:APIRequestContext, task: TaskModel) {
+      13 |     const newTask = await request.post(`${BASE_API}/tasks`, {data: task})
+    > 14 |     expect(newTask.ok()).toBeTruthy()
+         |                          ^
+      15 |     return newTask
+      16 | }
+      17 |
+        at postTask (C:\git\QAe2e\playwright-mark\tests\support\helpers.ts:14:26)
+        at C:\git\QAe2e\playwright-mark\tests\tasks.spec.ts:98:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\tasks-atualização-deve-concluir-uma-tarefa-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [chromium] › tests\tasks.spec.ts:62:9 › cadastro › não deve permitir tarefa duplicada ──────────
+    [chromium] › tests\tasks.spec.ts:94:9 › atualização › deve concluir uma tarefa ─────────────────
+  4 passed (2.0s)
