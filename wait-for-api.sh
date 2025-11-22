@@ -5,7 +5,7 @@ API_URL="http://localhost:3333/health"
 echo "Aguardando API ficar pronta em $API_URL ..."
 
 # tenta por até 30 segundos
-for i in {1..300}; do
+for i in {1..100}; do
   STATUS=$(curl -s -o /dev/null -w "%{http_code}" $API_URL)
 
   if [ "$STATUS" = "200" ]; then
