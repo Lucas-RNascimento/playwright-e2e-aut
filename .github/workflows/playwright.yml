@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ master ]
 
-permissions:
-  contents: read
-
 jobs:
   e2e:
     runs-on: ubuntu-latest
@@ -21,24 +18,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js 18.12.1
+      - name: Setup Node.js 18.12.1
         uses: actions/setup-node@v4
         with:
           node-version: 18.12.1
-          cache: 'npm'
+          cache: npm
 
       - name: Install dependencies
         run: |
           npm ci
           npx playwright install --with-deps
 
-      # ----- DOCKER COMPOSE START -----
-      - name: Docker Compose up (build and start)
-        uses: docker/compose-action@v3
+      # ------- DOCKER COMPOSE UP (action correta) --------
+      - name: Docker Compose up
+        uses: docker/actions/compose-action@v2
         with:
-          args: up -d --build
+          compose-file: docker-compose.yml
+          # aqui é importante: 'up' e argumentos separados
+          up-flags: -d --build
 
-      # ----- WAIT FOR HEALTHCHECKS -----
+      # ------- WAIT HEALTHCHECK -------
       - name: Wait for containers healthy
         run: |
           timeout=120
@@ -50,4 +49,49 @@ jobs:
             API=$(docker inspect -f '{{.State.Health.Status}}' mark-api || echo "missing")
             echo "mark-web: $WEB | mark-api: $API"
             if [ "$WEB" = "healthy" ] && [ "$API" = "healthy" ]; then
-              echo "Both services healthy!"
+              echo "All services healthy!"
+              break
+            fi
+            sleep $interval
+            elapsed=$((elapsed+interval))
+          done
+
+          if [ $elapsed -ge $timeout ]; then
+            echo "Timeout waiting for services"
+            docker ps
+            docker logs mark-web || true
+            docker logs mark-api || true
+            exit 1
+          fi
+
+      # ------- RUN PLAYWRIGHT -------
+      - name: Run Playwright tests
+        run: |
+          npx playwright test --reporter=list,html
+
+      # ------- DEBUG LIST -------
+      - name: Debug artifacts
+        if: always()
+        run: |
+          echo "--- playwright-report ---"
+          ls -la playwright-report || true
+          echo "--- test-results ---"
+          ls -la test-results || true
+
+      # ------- UPLOAD ARTIFACTS -------
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts
+          path: |
+            playwright-report
+            test-results
+
+      # ------- DOCKER COMPOSE DOWN (action correta) -------
+      - name: Docker Compose down
+        if: always()
+        uses: docker/actions/compose-action@v2
+        with:
+          compose-file: docker-compose.yml
+          down-flags: --volumes --remove-orphans
