@@ -32,7 +32,7 @@ jobs:
           curl -I http://localhost:8080 || exit 1
 
       - name: Install dependencies
-        run: yarn install
+        run: npm install
 
       - name: Run tests
         env:
