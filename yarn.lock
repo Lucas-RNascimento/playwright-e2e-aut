@@ -2,10 +2,7 @@
 # yarn lockfile v1
 
 
-"@faker-js/faker@^10.1.0":
-  "integrity" "sha512-C3mrr3b5dRVlKPJdfrAXS8+dq+rq8Qm5SNRazca0JKgw1HQERFmrVb0towvMmw5uu8hHKNiQasMaR/tydf3Zsg=="
-  "resolved" "https://registry.npmjs.org/@faker-js/faker/-/faker-10.1.0.tgz"
-  "version" "10.1.0"
+
 
 "@playwright/test@^1.56.1":
   "integrity" "sha512-vSMYtL/zOcFpvJCW71Q/OEGQb7KYBPAdKh35WNSkaZA75JlAO8ED8UN6GUNTm3drWomcbcqRPFqQbLae8yBTdg=="
