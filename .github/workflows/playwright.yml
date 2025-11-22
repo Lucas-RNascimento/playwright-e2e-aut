@@ -37,7 +37,7 @@ jobs:
         cd apps/api
         nohup yarn start &
       env:
-        PORT: 3001
+        PORT: 3333
 
     - name: Start Web UI
       run: |
@@ -47,7 +47,7 @@ jobs:
         PORT: 8080
 
     - name: Wait for API
-      run: npx wait-on http://localhost:3001
+      run: npx wait-on http://localhost:3333
 
     - name: Wait for Web UI
       run: npx wait-on http://localhost:8080
