@@ -24,15 +24,14 @@ jobs:
       - name: Start Docker Compose
         run: docker compose up -d --build
 
-      - name: Wait for services
-        run: |
-          echo "Aguardando API e Web subir..."
-          sleep 10
-          curl -I http://localhost:3333 || exit 1
-          curl -I http://localhost:8080 || exit 1
-
       - name: Install dependencies
         run: npm install
+
+      - name: Make wait script executable
+        run: chmod +x wait-for-api.sh
+
+      - name: Wait for API to be ready
+        run: ./wait-for-api.sh
 
       - name: Run tests
         env:
