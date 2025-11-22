@@ -1,46 +1,58 @@
-name: e2e
+name: E2E Tests
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ master ]
   pull_request:
 
 jobs:
-  test:
+  e2e:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Start Docker Compose
+        run: docker compose up -d --build
+
+      - name: Wait for services
+        run: |
+          echo "Aguardando API e Web subir..."
+          sleep 10
+          curl -I http://localhost:3333 || exit 1
+          curl -I http://localhost:8080 || exit 1
+
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
-      - name: Build images and start services
-        uses: docker/actions/compose-action@v2
-        with:
-          compose-file: docker-compose.yml
-          up-flags: "--wait"
-
-      - name: Run Playwright tests
+      - name: Run tests
         env:
           BASE_URL: http://localhost:8080
-        run: npx playwright test --reporter=line
+          BASE_API: http://localhost:3333
+        run: |
+          mkdir -p playwright-report
+          npx playwright test --reporter=line
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: playwright-report
           path: playwright-report/
 
-      - name: Shutdown containers
-        uses: docker/actions/compose-action@v2
+      - name: Upload test-results
+        uses: actions/upload-artifact@v4
         with:
-          compose-file: docker-compose.yml
-          down-flags: "--volumes --remove-orphans"
+          name: test-results
+          path: test-results/
+
+      - name: Shutdown Docker
+        run: docker compose down --volumes --remove-orphans
